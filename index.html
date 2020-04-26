@@ -4,37 +4,19 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>svgEditor</title>
 <script>
-function insertSvgAtCursor(myField, myValue) {
-        //IE support
-        if (document.selection) {
-            myField.focus();
-            sel = document.selection.createRange();
-            sel.text = myValue;
-        }
-        // Microsoft Edge
-        else if(window.navigator.userAgent.indexOf("Edge") > -1) {
-          var startPos = myField.selectionStart; 
-          var endPos = myField.selectionEnd; 
-              
-          myField.value = myField.value.substring(0, startPos)+ myValue 
-                 + myField.value.substring(endPos, myField.value.length); 
-          
-          var pos = startPos + myValue.length;
-          myField.focus();
-          myField.setSelectionRange(pos, pos);
-        }
-        //MOZILLA and others
-        else if (myField.selectionStart || myField.selectionStart == '0') {
-            var startPos = myField.selectionStart;
-            var endPos = myField.selectionEnd;
-            myField.value = myField.value.substring(0, startPos)
-                + myValue
-                + myField.value.substring(endPos, myField.value.length);
-        } else {
-            myField.value += myValue;
-        }
+function insertSvgAtCursor(el,ins) {
+window.lstText={};
+    if (el.setSelectionRange){
+        el.value = el.value.substring(0,el.selectionStart) + ins + el.value.substring(el.selectionStart,el.selectionEnd) + el.value.substring(el.selectionEnd,el.value.length);
     }
-// END OF FUNCTION
+    else if (document.selection && document.selection.createRange) {
+        el.focus();
+        var range = document.selection.createRange();
+        range.text = ins + range.text;
+    }
+}
+
+// END OF FUNCTION insertSvgAtCursor.js
 </script>
 <script>
 function load() {
