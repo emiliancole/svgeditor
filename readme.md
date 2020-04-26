@@ -1,4 +1,4 @@
-# svgEditor v04
+# svgEditor /docs
 
 SVG-HTML Editor Programming Interface.
 
