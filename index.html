@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>svgEditor</title>
+<script>
+function insertSvgAtCursor(myField, myValue) {
+        //IE support
+        if (document.selection) {
+            myField.focus();
+            sel = document.selection.createRange();
+            sel.text = myValue;
+        }
+        // Microsoft Edge
+        else if(window.navigator.userAgent.indexOf("Edge") > -1) {
+          var startPos = myField.selectionStart; 
+          var endPos = myField.selectionEnd; 
+              
+          myField.value = myField.value.substring(0, startPos)+ myValue 
+                 + myField.value.substring(endPos, myField.value.length); 
+          
+          var pos = startPos + myValue.length;
+          myField.focus();
+          myField.setSelectionRange(pos, pos);
+        }
+        //MOZILLA and others
+        else if (myField.selectionStart || myField.selectionStart == '0') {
+            var startPos = myField.selectionStart;
+            var endPos = myField.selectionEnd;
+            myField.value = myField.value.substring(0, startPos)
+                + myValue
+                + myField.value.substring(endPos, myField.value.length);
+        } else {
+            myField.value += myValue;
+        }
+    }
+// END OF FUNCTION
+</script>
+<script>
+function load() {
+var file = document.getElementById("myFile").files[0];
+var reader = new FileReader();
+reader.onload = function (e) {
+    var textArea = document.getElementById("text");
+    textArea.value = e.target.result;
+	}
+reader.readAsText(file);
+}
+
+function update() {
+var md = document.getElementById("text").value;
+  document.getElementById("content").innerHTML = md;
+}
+
+function copy() {
+  let textarea = document.getElementById("text");
+  textarea.select();
+  document.execCommand("copy");
+}
+
+function download(){
+    var text = document.getElementById("text").value;
+    text = text.replace(/\n/g, "\r\n"); // To retain the Line breaks.
+    var blob = new Blob([text], { type: "text/plain"});
+    var anchor = document.createElement("a");
+    anchor.download = "out.txt";
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.target ="_blank";
+    anchor.style.display = "none"; // just to be safe!
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+ }
+ 
+ function help() {
+	 alert("1. [Choose File] and [Load] or write html/svg code.\n"+
+	 "2. [Update] to side-render textarea code.\n"+
+	 "3. [Copy] to copy textarea content to clipboard.\n"+
+	 "4. [Download] textarea content.\n"+
+	 "5. [Clear] to delete textarea.\n"+
+	 "6. [Help] to open this tutorial.");
+}
+
+function erase() {
+	 document.getElementById("text").value = " ";
+}
+</script>
+
+<script type="text/javascript">
+function template() {
+  var t = document.getElementById("myTemplate").value;
+  var idText = document.getElementById('text');
+ switch(t) {
+  case "a":
+    var string = "<a href='http://example.com' target='_blank'>\n\n</a>\n";
+    break;
+  case "html":
+    var string = "<html>\n <head>\n </head>\n <body>\n \n</body>\n</html>\n";
+    break;
+  case "php":
+    string = "<\?php\n\n\n?>\n";
+	break
+  case "svg":
+    string = "<svg width='500' height='500' viewBox='0 0 500 500' >\n"+
+	"<rect x='0 y='0' width='500' height='500' "+
+	"style='stroke:black;stroke-width:1;fill:none;' />\n\n\n</svg>\n";
+    break;
+  default:
+    string = "";
+	}
+  insertSvgAtCursor(idText, string);
+}
+
+function draw() {
+  var x = document.getElementById("mySelect").value;
+  var idText = document.getElementById('text');
+ // document.getElementById("demo").innerHTML = "You selected: " + x;
+ switch(x) {
+  case "circle":
+    var string = "<circle cx='50' cy='50' r='10' style='stroke:black;stroke-width:1;fill:none;' />\n";
+    break;
+  case "rect":
+    string = "<rect x='50' y='50' width='100' height='50' style='stroke:black;stroke-width:1;fill:none;' />\n";
+    break;
+  default:
+    string = "";
+	}
+  insertSvgAtCursor(idText, string);
+}
+
+</script>
+</head>
+<body style="background-color:lightgrey;">
+
+<h3>SVG-HTML EDITOR v04<input id="myFile" type="file"/>
+<button onclick="load()">Load</button>
+<select id="myTemplate" onchange="template()">
+<option value="">TEMPLATE</option>
+  <option value="a">a</option>
+  <option value="html">html</option>
+  <option value="svg">svg</option>
+  <option value="php">php</option>
+</select>
+</h3>
+<button onclick="update()">Update</button>
+<button onclick="copy()">Copy</button>
+<button onclick="download()">Download</button>
+<button onclick="erase()">Clear</button>
+<button onclick="help()">Help</button>
+
+<select id="mySelect" onchange="draw()">
+<option value="">SHAPE</option>
+  <option value="circle">circle</option>
+  <option value="ellipse">ellipse</option>
+  <option value="polygon">polygon</option>
+  <option value="rect">rect</option>
+</select>
+
+<hr>
+<table><tr><td style="vertical-align: top;">
+ <textarea id="text" rows="40" cols="50" style="overflow:scroll;">
+  
+</textarea></td><td style="vertical-align: top;">
+ <div id="content"></div></td>
+ </tr></table>
+
+</body>
+</html>
