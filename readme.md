@@ -2,4 +2,4 @@
 
 SVG-HTML Editor Programming Interface.
 
-(index.thml not working!)
+(index.html not working!)
