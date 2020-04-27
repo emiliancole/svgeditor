@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>svgEditor</title>
+<script src="utilityFunctions.js"></script>
+<script src="insertTextarea.js"></script>
+<script src="svgShapeDefs.js"></script>
+<script src="template.js"></script>
+</head>
+<body style='background-color:lightgrey;' >
+<h6>SVG-HTML EDITOR v05 - <input id="myFile" type="file"/>
+<button onclick="load()">Load</button>
+<button onclick="update()">Update</button>
+<button onclick="copy()">Copy</button>
+<button onclick="download()">Download</button>
+<button onclick="erase()">Clear</button>
+<button onclick="help()">Help</button>
+</h6>
+
+<input type="button" value="svg" onclick="insert(window.lstText,svg)">
+<input type="button" value="circle" onclick="insert(window.lstText,circle)">
+<input type="button" value="ellipse" onclick="insert(window.lstText,ellipse)">
+<input type="button" value="line" onclick="insert(window.lstText,line)">
+<input type="button" value="path" onclick="insert(window.lstText,path)">
+<input type="button" value="rect" onclick="insert(window.lstText,rect)">
+
+<select id="myTemplate" onchange="template()">
+<option value="">TEMPLATE</option>
+  <option value="a">a</option>
+  <option value="html">html</option>
+  <option value="svg">svg</option>
+  <option value="php">php</option>
+</select>
+<hr>
+<table><tr><td style="vertical-align: top;">
+ <textarea id="text" rows="40" cols="50" style="overflow:scroll;" 
+ onfocus="window.lstText=this;">
+  
+</textarea></td><td style="vertical-align: top;">
+ <div id="content"></div></td>
+ </tr></table>
+
+
+</body>
+</html>
+
